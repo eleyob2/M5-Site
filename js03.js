@@ -1,4 +1,4 @@
-/*   JavaScript 7th Edition
+/*JavaScript 7th Edition
      Chapter 3
      Chapter case
 
@@ -10,25 +10,81 @@
      Filename: js03.js
  */
 // Days of the week
-let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] ;
+let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// date of games played
-let gameDates = ["2024-7-28", "2024-8-1", "2024-8-2", "2024-8-3", "2024-8-4", "2024-8-6", "2024-8-8", "2024-8-9", "2024-8-10", "2024-8-11", "2024-8-12", "2024-8-14", "2024-8-16", "2024-8-17", "2024-8-18", "2024-8-20", "2024-8-22", "2024-8-23", "2024-8-24", "2024-8-25", "2024-8-28", "2024-8-30", "2024-8-31"];
+window.addEventListener("load", addWeekDays);
 
-// game opponents
-let gameOpponents = ["Bettendorf", "Marion", "Clinton", "Clinton", "Clinton", "Urbandale", "Cedar Falls", "Cedar Falls", "Cedar Falls", "Bettendorf", "Bettendorf", "Ames", "Ames", "Ames", "Waukee", "Waukee", "Mason City", "Mason City", "Mason City", "Clinton", "Marion", "Cedar Falls", "Cedar Falls"];
+// Function to write weekday names into the calender
+function addWeekDays() {
+    let i = 0; // initial counter value
 
-// game locations: h (home) or a (away)
-let gameLocations = ["h", "a", "h", "h", "h", "h", "a", "a", "a","a", "a", "h", "h", "h", "a", "a", "a", "a", "a", "a", "h", "h", "h"];
+    // reference the collection of heading cells in the table
+    let headingCells = document.getElementsByTagName("th");
 
-// runs scored in each game
-let runsScored = [2, 4, 2, 1, 0, 2, 2, 1, 8, 3, 4, 7, 4, 1, 2, 0, 8, 6, 3, 0, 5, 7, 3];
+    // write each of the seven days into a heading cell
+    while (i < 7) {
+        headingCells[i].innerHTML = weekDays[i];
 
-// runs allowed in each game
-let runsAllowed = [1, 2, 0, 5, 3, 3, 1, 5, 3, 1, 3, 6, 7, 4, 6, 3, 2, 4, 1, 0, 3, 2, 4];
+        // increase the counter by 1
+        i++;
+    }
+}
 
-// innings played in each game
-let gameInnings = [9, 9, 9, 6, 9, 9, 12, 7, 9, 9, 9, 11, 9, 4.5, 9, 9, 9, 9, 9, 0, 2, 9, 10];
 
-// game outcome:  W (win), L (lose), S (suspended prior to completion), P (postponed to later date) 
-let gameResults  = ["W", "W", "W", "L", "L", "L", "W",  "L", "W", "W", "W", "W", "L", "S", "L", "L", "W", "W", "W", "P", "S", "W", "L"]; 
+
+
+
+window.addEventListener("load", showGames);
+
+// Functon to write game information into the calender
+function showGames() {
+    for (let i = 0; i < gameDates.length; i++) {
+        let gameInfo = "";
+
+        // Open the paragraph
+        switch (gameResults[i]) {
+            case "W":
+                gameInfo += "<p class='win'>";
+                break;
+            case "L":
+                gameInfo += "<p class='lose'>";
+                break;
+            case "S":
+                gameInfo += "<p class='suspended'>";
+                break;
+            case "P":
+                gameInfo += "<p class='postponed'>";
+                break;
+        }
+
+        // Display the game location
+        if (gameLocations[i] === "h") {
+            gameInfo += "vs. ";
+        }  else if (gameLocations[i] === "a") {
+            gameInfo += "@ ";
+        }
+
+        // Include the opponent
+        gameInfo += gameOpponents[i] + "<br>";
+
+        // Include the result and score
+        gameInfo += gameResults[i] + ": (" + runsScored[i] + " - " + runsAllowed[i] + ")";
+
+        // Display innings played for suspended, shortened, or extra-inning games
+        if (gameInnings[i] < 5) {
+            gameInfo += " [" + gameInnings[i]+"]***";
+        }  else if (gameInnings[i] < 9) {
+            gameInfo += " [" + gameInnings[i]+"]*";            
+        }  else if (gameInnings[i] > 9) {
+            gameInfo += " [" + gameInnings[i] + "]";
+        }
+
+        // Close the paragraph
+        gameInfo += "</p>";
+
+        // Write the information into a table cell
+        let tableCell = document.getElementById(gameDates[i]);
+        tableCell.insertAdjacentHTML("beforeEnd", gameInfo)
+    }
+}
+
